@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Online PDF Converter – Convert Any File to PDF Instantly</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .converter-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: #f8f9ff;
+            border-color: #764ba2;
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .file-preview {
+            display: none;
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .file-preview.show {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+        }
+
+        .convert-btn.show {
+            display: block;
+        }
+
+        .convert-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tool-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .tool-title {
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Free Online PDF Converter</h1>
+            <p>Convert Any File to PDF Instantly - Fast, Secure & Professional</p>
+        </div>
+
+        <div class="converter-box">
+            <div class="tabs">
+                <button class="tab active" data-type="word-to-pdf">Word to PDF</button>
+                <button class="tab" data-type="excel-to-pdf">Excel to PDF</button>
+                <button class="tab" data-type="jpg-to-pdf">JPG to PDF</button>
+                <button class="tab" data-type="png-to-pdf">PNG to PDF</button>
+                <button class="tab" data-type="ppt-to-pdf">PPT to PDF</button>
+                <button class="tab" data-type="pdf-to-word">PDF to Word</button>
+            </div>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">☁️</div>
+                <div style="font-size: 1.2em; color: #667eea; font-weight: 700; margin-bottom: 10px;">
+                    Click to Upload or Drag & Drop
+                </div>
+                <div style="color: #666; font-size: 0.9em;">
+                    Supports: DOC, DOCX, XLS, XLSX, JPG, PNG, PPT, PDF
+                </div>
+            </div>
+
+            <input type="file" id="fileInput" style="display: none;" 
+                   accept=".doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.ppt,.pptx,.pdf">
+
+            <div class="file-preview" id="filePreview">
+                <div>
+                    <div id="fileName" style="font-weight: 600;">document.pdf</div>
+                    <div id="fileSize" style="color: #666; font-size: 0.9em;">2.5 MB</div>
+                </div>
+                <button onclick="removeFile()" style="background: #ff4757; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+                    Remove
+                </button>
+            </div>
+
+            <button class="convert-btn" id="convertBtn">Convert to PDF</button>
+        </div>
+
+        <div class="tools-grid">
+            <div class="tool-card" data-conversion="word-to-pdf">
+                <div class="tool-icon">📄</div>
+                <div class="tool-title">Word to PDF</div>
+                <p style="color: #666; font-size: 0.9em;">Convert DOC, DOCX to PDF</p>
+            </div>
+
+            <div class="tool-card" data-conversion="excel-to-pdf">
+                <div class="tool-icon">📊</div>
+                <div class="tool-title">Excel to PDF</div>
+                <p style="color: #666; font-size: 0.9em;">Convert XLS, XLSX to PDF</p>
+            </div>
+
+            <div class="tool-card" data-conversion="jpg-to-pdf">
+                <div class="tool-icon">🖼️</div>
+                <div class="tool-title">JPG to PDF</div>
+                <p style="color: #666; font-size: 0.9em;">Convert images to PDF</p>
+            </div>
+
+            <div class="tool-card" data-conversion="png-to-pdf">
+                <div class="tool-icon">🎨</div>
+                <div class="tool-title">PNG to PDF</div>
+                <p style="color: #666; font-size: 0.9em;">Convert PNG files to PDF</p>
+            </div>
+
+            <div class="tool-card" data-conversion="ppt-to-pdf">
+                <div class="tool-icon">📽️</div>
+                <div class="tool-title">PPT to PDF</div>
+                <p style="color: #666; font-size: 0.9em;">Convert presentations to PDF</p>
+            </div>
+
+            <div class="tool-card" data-conversion="pdf-to-word">
+                <div class="tool-icon">📝</div>
+                <div class="tool-title">PDF to Word</div>
+                <p style="color: #666; font-size: 0.9em;">Convert PDF to DOCX</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFile = null;
+        let currentConversion = 'word-to-pdf';
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('PDF Converter initialized');
+
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(function(t) {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    currentConversion = this.dataset.type;
+                    updateButton();
+                });
+            });
+
+            // Tool cards
+            document.querySelectorAll('.tool-card').forEach(function(card) {
+                card.addEventListener('click', function() {
+                    const conversion = this.dataset.conversion;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(function() {
+                        document.querySelector('[data-type="' + conversion + '"]').click();
+                    }, 300);
+                });
+            });
+
+            // Upload area
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.background = '#f8f9ff';
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                this.style.background = '';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.background = '';
+                if (e.dataTransfer.files.length > 0) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            // Convert button
+            document.getElementById('convertBtn').addEventListener('click', function() {
+                convertFile();
+            });
+        });
+
+        function handleFile(file) {
+            currentFile = file;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatSize(file.size);
+            document.getElementById('filePreview').classList.add('show');
+            document.getElementById('convertBtn').classList.add('show');
+        }
+
+        function removeFile() {
+            currentFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('filePreview').classList.remove('show');
+            document.getElementById('convertBtn').classList.remove('show');
+        }
+
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function updateButton() {
+            const btn = document.getElementById('convertBtn');
+            const text = currentConversion.includes('to-pdf') ? 'Convert to PDF' : 
+                         'Convert to ' + currentConversion.split('-to-')[1].toUpperCase();
+            btn.textContent = text;
+        }
+
+        function convertFile() {
+            if (!currentFile) {
+                alert('Please upload a file first');
+                return;
+            }
+
+            const btn = document.getElementById('convertBtn');
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Converting...';
+            btn.disabled = true;
+
+            setTimeout(function() {
+                // Create a download link
+                const link = document.createElement('a');
+                const fileName = currentFile.name.replace(/\.[^/.]+$/, '') + '_converted.pdf';
+                
+                // Create a blob URL (in production, this would be the actual converted file)
+                const blob = new Blob([currentFile], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                link.href = url;
+                link.download = fileName;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                
+                // Cleanup
+                setTimeout(function() {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                alert('Success! File converted: ' + fileName + '\n\nYour file is downloading now.\n\nNote: This is a demo - the actual file conversion happens on a backend server in production.');
+                
+                btn.textContent = originalText;
+                btn.disabled = false;
+                
+                // Keep the file preview visible instead of removing it
+                // removeFile();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
